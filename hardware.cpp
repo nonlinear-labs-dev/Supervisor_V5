@@ -255,11 +255,13 @@ uint8_t WasInActiveState(void)
 void SetActiveState(uint8_t on)
 {
 	static uint8_t		old = 0xAA;		// illegal bool value to force update on first call
+	if (config.power_switch_is_latching)	// disable the feature if latching switch
+		on = 0;
 	if (on != old)
 	{
 		old = on;
-		if (on)		EEPROM_Write( (was_in_active_state_RAM = LIVE_PATTERN) ) ;
-		else		EEPROM_Write( (was_in_active_state_RAM = !LIVE_PATTERN) ) ;
+		if (on)		EEPROM_Write( (was_in_active_state_RAM = LIVE_PATTERN) );		// intentional assignment
+		else		EEPROM_Write( (was_in_active_state_RAM = !LIVE_PATTERN) );		// intentional assignment
 	}
 }
 

@@ -43,7 +43,9 @@ void	Audio_t::_UnMute(void)
 void	Audio_t::Mute(uint8_t forced)
 {
 	requested_state = 0;
-	if ( forced ||  !BitGet(config.status, STAT_MUTING_OVERRIDE_ENABLE) )
+	if (forced)
+		BitClr(config.status, STAT_MUTING_OVERRIDE_ENABLE);
+	if ( !BitGet(config.status, STAT_MUTING_OVERRIDE_ENABLE) )
 		_Mute();
 }
 

@@ -21,7 +21,7 @@ void COMM_Proccess(void)
 		switch (data)
 		{
 			case 'L' :
-				if ( config.GetRunState() == RS_RUNNING )
+				if ( config.GetRunState()==RS_RUNNING  ||  config.GetRunState()==RS_BOOTING )
 					BitSet(config.status, STAT_SYSTEM_LOCKED);
 			break;
 			case 'l' :

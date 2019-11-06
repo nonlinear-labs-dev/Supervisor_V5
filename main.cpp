@@ -69,13 +69,13 @@ void    SM_TransitionTo(void (* pNewState)(void))
 	sm.pause = 0;
 	
 	if (pNewState==SM_Standby)
-		{ config.SetRunState(RS_STANDBY); SerialDeInit(); };
+		{ config.SetRunState(RS_STANDBY); SerialDeInit(); BitClr(config.status, STAT_SYSTEM_LOCKED); };
 	if (pNewState==SM_Booting  || pNewState==SM_HotReboot)
 		{ config.SetRunState(RS_BOOTING); SerialInit(); };
 	if (pNewState==SM_Running)
 		{ config.SetRunState(RS_RUNNING); };
 	if (pNewState==SM_Shutdown)
-		{ config.SetRunState(RS_SHUTDOWN); };
+		{ config.SetRunState(RS_SHUTDOWN); BitClr(config.status, STAT_SYSTEM_LOCKED); };
 	
 	SetRunningState( (pNewState==SM_Running) );
 	if ( (pNewState==SM_Booting) || (pNewState==SM_Running) )		// Set auto-reboot condition only when switch to Booting or Running

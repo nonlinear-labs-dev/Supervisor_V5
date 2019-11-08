@@ -166,7 +166,7 @@ void	SM_Booting(void)
 			LPC_Start_MonitorAudioEngineStatus(UNMUTE_TIMEOUT-BOOTING_FINISHED);
 			SM_TransitionTo( SM_Running ); 
 			PwrSwitch.Arm();	// arm button again after boot period, if momentary type
-		break;
+		return;
 	}
 }
 
@@ -202,13 +202,13 @@ void	SM_Shutdown(void)
 	{
 		sm.step=1; Led.Blink_Fast();
 		BitClr(config.status, STAT_MUTING_OVERRIDE_ENABLE);	Audio.Mute(1); LPC_Stop_MonitorAudioEngineStatus();
-		COMM_DeInit();
 		ePC.SwitchOff(); BBB.SwitchOff(); SM_Pause(100);
 	}
 	else
 	{
 		if ( ePC.IsOff() && BBB.IsOff() )
 		{
+			COMM_DeInit();
 			PwrMonitor.SystemOff();
 			SM_TransitionTo( SM_Standby );
 			SM_Pause(1000);					// wait a second to enter StandBy

@@ -77,8 +77,6 @@
 void 	HardwareInit_1(void);	// primary hardware init that doesn't need IRQ (timer) functionality
 void 	HardwareInit_2(void);	// secondary hardware init that *DOES* need IRQ (timer) functionality
 
-void	SerialInit(void);
-void	SerialDeInit(void);
 
 void	LPC_Reset(void);		// reset LPC if hardware is capable of this
 

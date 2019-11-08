@@ -5,6 +5,7 @@
 #include "bit_manipulation.h"
 #include "pin_manipulation.h"
 #include "globals.h"
+#include "comm.h"
 
 #include <avr/wdt.h>
 #include <avr/interrupt.h>
@@ -119,27 +120,6 @@ void ArmComparatorIRQ(void)
 	BitSet(ACSR, ACIS1);		// ... on falling edge
 	BitSet(ACSR, ACIE);			// Enable Comparator Interrupts
 	
-}
-
-#define UBRR_300		(416)		// 2000000/(16ul*BITS_PER_SECOND) -1   , for 300bps
-#define UBRR_1200		(103)		// 2000000/(16ul*BITS_PER_SECOND) -1   , for 1200bps
-#define UBRR_9600		(12)		// 2000000/(16ul*BITS_PER_SECOND) -1   , for 9600bps
-
-#define UBRR			(UBRR_300)
-
-void SerialInit(void)
-{
-	cli();
-	UBRRH = (uint8_t) ( UBRR >>8 );
-	UBRRL = (uint8_t) ( UBRR );
-	UCSRB = (1<<RXEN) | (1<<TXEN);
-	UCSRC = (1<<URSEL) | (0<<UMSEL) | (0<<UPM0) | (0<<USBS) | (3<<UCSZ0);	// no parity, 1 stop bit, 8 data bits
-	sei();
-}
-
-void SerialDeInit(void)
-{
-	UCSRB = 0;
 }
 
 uint8_t	GetPowerSwitch(void)
@@ -274,7 +254,7 @@ void 	HardwareInit_1(void)	// primary hardware init that doesn't need IRQ (timer
 	IOPortInit();
 	TimerInit();
 	ComparatorInit();
-	SerialDeInit();
+	COMM_DeInit();
 }
 
 void SwitchMainSupply(uint8_t on)
@@ -307,6 +287,7 @@ void SwitchMainSupply(uint8_t on)
 
 void 	HardwareInit_2(void)	// secondary hardware init that *DOES* need IRQ (timer) functionality
 {
+	COMM_DeInit();
 	config.auto_reboot = WasInActiveState();
 	Wait(2);
 	if ( PinGet(SYS_IOPT_Relays_MUTE) )		// ext Pullup on MUTE means 7.1 hardware

@@ -20,34 +20,44 @@ The LPC Muting Control can be overriden by commands via the BBB Command&Status I
 2) BBB Command&Status Interface (only available with Uniboard Rev 7.1 and later, and with V7 Uniboards
 after rework) :
 A USART (async. serial interface) connection is used between Supervisor and BBB ('tty5', !!needs two
-wires to be patched on BBB's "H8"-Pinheader!!).
-Setup is : 300bps, 8 data bits, 1 stop bit, no parity.
+wires to be patched on BBB's "P8"-Pinheader!!).
+
+Setup is : 300bps, 8 data bits, 2 stop bit, odd parity.
+
+BBB Pins used are :
+TXD (as seen from Supervisor)	: gpio1[15](P8.15)  and  uart5_rxd(P8.38) via patch wire
+RXD (as seen from Supervisor)	: gpio1[26](P8.14)  and  uart5_txd(P8.37) via patch wire
+	
 
 2a) Supervisor contiuously sends a 3-byte sequence: Status Byte, Hardware-ID, Firmware-ID:
 	- Status Byte
 		Bit 7 	: always == 1 (delimiter)
 		Bit 6&5	: Supervisor Status (00:Standby, 01:Booting, 10:Running, 11:Shutdown)
+			  (00:Standby is for completeness only, as the UART is off when BBB has no power)
 		Bit 4	: Supervisor Power-Button Locked
 		Bit 3	: unused (0)
 		Bit 2	: Muting Override Enable : Enables overriding of the Audio Muting
 		Bit 1	: Muting Override Value : State of the Muting applied by Override (1:unmuted)
 		Bit 0	: Current Muting State : Actual state of the audio path relays. 1:unmuted
 
-	- Hardware-ID (uint8), decimal value of the Hardware Version ID of the Uniboard as detected:
+	- Hardware-ID, decimal value of the Hardware Version of the Uniboard as detected:
 		71	: Version 7.1
 	
 	- Firmware-ID, decimal value of the Firmware Version ID:
 		50	: Version 5.0
 		
 
-2b) Supervisor accepts 1-byte commands :
+2b) Supervisor accepts 3-byte commands :
+	First and last byte is character 'c'.
+	Middle character is the actual command:
 	- 'L'/'l'	: enable/disable --Power Button [L]ocking-- (effective only in "Running" or "Booting" mode)
 	The Locking is disabled and reset on transtion into "Standby" and "Shutdown" states.
 	- 'U'/'u'	: set/reset the state ([U]nmute/[m[u]ute) applied during Muting Override
 	- 'O'/'o'	: enable/disable --Muting [O]verride--
 	Muting Override is only effective until a non-maskable Muting corrurs, which happens on
 	transition into "Shutdown" and "Booting" states, and which also resets the Override.
-	
+
+	From a terminal, simply type, for  eg 'cLc' to activate "Power Button Locking".
 
 3) In-Service Reprogramming (only available with Uniboard Rev 7.1 and later) :
 -- work in progress --

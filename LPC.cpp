@@ -54,7 +54,7 @@ void LPC_MonitorAudioEngineStatus_Process(void)
 
 	old_mstate = mstate;
 	mstate = GetAudioEngineSignalPin();
-	LED_A(mstate);
+	// LED_A(mstate);
 	if ( mstate && (high_time < 127) )
 		high_time++;
 	if ( !mstate && (low_time < 127) )

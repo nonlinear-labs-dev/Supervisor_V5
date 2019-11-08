@@ -69,9 +69,9 @@ void    SM_TransitionTo(void (* pNewState)(void))
 	sm.pause = 0;
 	
 	if (pNewState==SM_Standby)
-		{ config.SetRunState(RS_STANDBY); SerialDeInit(); BitClr(config.status, STAT_SYSTEM_LOCKED); };
+		{ config.SetRunState(RS_STANDBY); BitClr(config.status, STAT_SYSTEM_LOCKED); };
 	if (pNewState==SM_Booting  || pNewState==SM_HotReboot)
-		{ config.SetRunState(RS_BOOTING); SerialInit(); };
+		{ config.SetRunState(RS_BOOTING); };
 	if (pNewState==SM_Running)
 		{ config.SetRunState(RS_RUNNING); };
 	if (pNewState==SM_Shutdown)
@@ -159,7 +159,7 @@ void	SM_Booting(void)
 			sm.step++; ePC.SwitchOn(); SM_Pause(1000); 
 		return;
 		case 3 :
-			sm.step++; LPC_Reset();
+			sm.step++; COMM_Init();LPC_Reset();
 			SM_Pause(BOOTING_FINISHED);
 		return;
 		case 4 :
@@ -200,9 +200,9 @@ void	SM_Shutdown(void)
 {
 	if ( sm.step==0 )
 	{
-		LPC_Stop_MonitorAudioEngineStatus();
 		sm.step=1; Led.Blink_Fast();
-		BitClr(config.status, STAT_MUTING_OVERRIDE_ENABLE);	Audio.Mute(1); 
+		BitClr(config.status, STAT_MUTING_OVERRIDE_ENABLE);	Audio.Mute(1); LPC_Stop_MonitorAudioEngineStatus();
+		COMM_DeInit();
 		ePC.SwitchOff(); BBB.SwitchOff(); SM_Pause(100);
 	}
 	else
@@ -218,6 +218,7 @@ void	SM_Shutdown(void)
 
 void SM_HotReboot(void)
 {
+		COMM_Init();
 		LPC_Start_MonitorAudioEngineStatus(0);
 		SM_TransitionTo( SM_Running ); 
 		PwrSwitch.Arm();	// arm button again after boot period, if momentary type

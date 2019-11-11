@@ -190,10 +190,15 @@ void	SM_Running(void)
 		}
 	}
 
+#if __CHECK_EPC__
 	if ( ePC.StateChange() )
 		Led.On_IndicateGlitch1();
+#endif
+
+#if __CHECK_BBB__
 	if ( BBB.StateChange() || BBB.HeartbeatTimedOut() )
 		Led.On_IndicateGlitch2();
+#endif
 }
 
 void	SM_Shutdown(void)

@@ -130,6 +130,7 @@
         <avrgcc.compiler.directories.IncludePaths>
           <ListValues>
             <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.2.209\include</Value>
+            <Value>../src</Value>
           </ListValues>
         </avrgcc.compiler.directories.IncludePaths>
         <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
@@ -150,6 +151,7 @@
         <avrgcccpp.compiler.directories.IncludePaths>
           <ListValues>
             <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.2.209\include</Value>
+            <Value>../src</Value>
           </ListValues>
         </avrgcccpp.compiler.directories.IncludePaths>
         <avrgcccpp.compiler.optimization.level>Optimize for size (-Os)</avrgcccpp.compiler.optimization.level>
@@ -175,82 +177,85 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="audio.cpp">
+    <Folder Include="src\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\audio.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="audio.h">
+    <Compile Include="src\audio.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="BBB.cpp">
+    <Compile Include="src\BBB.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="BBB.h">
+    <Compile Include="src\BBB.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="bit_manipulation.h">
+    <Compile Include="src\bit_manipulation.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="comm.cpp">
+    <Compile Include="src\comm.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="comm.h">
+    <Compile Include="src\comm.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="coos.cpp">
+    <Compile Include="src\coos.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="coos.h">
+    <Compile Include="src\coos.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="ePC.cpp">
+    <Compile Include="src\ePC.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="ePC.h">
+    <Compile Include="src\ePC.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="ESPI.cpp">
+    <Compile Include="src\ESPI.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="ESPI.h">
+    <Compile Include="src\ESPI.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="globals.h">
+    <Compile Include="src\globals.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="hardware.cpp">
+    <Compile Include="src\hardware.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="hardware.h">
+    <Compile Include="src\hardware.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="led.cpp">
+    <Compile Include="src\led.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="led.h">
+    <Compile Include="src\led.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="LPC.cpp">
+    <Compile Include="src\LPC.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="LPC.h">
+    <Compile Include="src\LPC.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="main.cpp">
+    <Compile Include="src\main.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="pin_manipulation.h">
+    <Compile Include="src\pin_manipulation.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="pwr_monitor.cpp">
+    <Compile Include="src\pwr_monitor.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="pwr_monitor.h">
+    <Compile Include="src\pwr_monitor.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="pwr_switch.cpp">
+    <Compile Include="src\pwr_switch.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="pwr_switch.h">
+    <Compile Include="src\pwr_switch.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

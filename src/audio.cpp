@@ -22,7 +22,7 @@ void	Audio_t::_Mute(void)
 	PinClr(SYS_OPT_Relays_UNMUTE);
 	PinSet(SYS_IOPT_Relays_MUTE);
 	BitClr(config.status, STAT_UNMUTED);
-	// LED_B(0);
+	LED_B(0);
 	if ( !config.mute_is_monostable )
 		step = 1;	// start step-chain to release coil after some time when we have bi-stable/latching relays
 }
@@ -34,7 +34,7 @@ void	Audio_t::_UnMute(void)
 	PinClr(SYS_IOPT_Relays_MUTE);
 	PinSet(SYS_OPT_Relays_UNMUTE);
 	BitSet(config.status, STAT_UNMUTED);
-	// LED_B(1);
+	LED_B(1);
 	if ( !config.mute_is_monostable )
 		step = 1;	// start step-chain to release coil after some time when we have bi-stable/latching relays
 }

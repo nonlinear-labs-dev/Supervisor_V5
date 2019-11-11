@@ -34,25 +34,23 @@ The ID Numbers+1 will be displayed as LED blinks during Power-Up, after HW- Vers
 
 
 // --------- define this != 0 to check and display severe ePC status error
-#define __CHECK_EPC__	(1)
+#define __CHECK_EPC__	(0)
 /* 
->> CURRENTLY NOT IMPLEMENTED, NO EFFECT
 	When defined, this checks whether sensed ePC active indicator did change state
 	after actuating ePC power button. If it didn't change, something is
 	wrong and system LED shows an Error Pattern. 
-	Check is performed after the initial start-up wait time (20).
+	Check is performed after the initial start-up wait time (~20sec).
 	Also, after start-up the signal is periodically checked and
 	an Error pattern is displayed on LED when not present.
 */
 
 
 // --------- define this != 0 to check and catch severe BBB status error
-#define __CHECK_BBB__	(1)
+#define __CHECK_BBB__	(0)
 /* 
->> CURRENTLY NOT IMPLEMENTED, NO EFFECT
 	When defined, this checks whether BBB signals its 'alive' signal.
 	If not, system LED shows an Error Pattern.
-	Check is performed after the initial start-up wait time (20).
+	Check is performed after the initial start-up wait time (~20sec).
 	Also, after start-up the signal is periodically checked and
 	an Error pattern is displayed on LED when not present.
 */

@@ -101,10 +101,13 @@ void    SM_Pause(uint16_t ms)
 void    SM_ProcessStates(void)
 {
 	if ( sm.pause )		// wait first ?
-		{ sm.pause--; return; }
-
-	if ( sm.pState )	// catch potential NULL pointer, otherwise ...
-		(*sm.pState)();		// ... call state
+		sm.pause--;
+	else
+	{
+		if ( sm.pState )	// catch potential NULL pointer, otherwise ...
+			(*sm.pState)();		// ... call state
+	}
+	COMM_StartStatusWrite();
 }
 
 void	SM_WaitForPwrGood(void)
@@ -264,7 +267,8 @@ int main(void)
 		// real time stuff
 		if (sm.pState!=SM_WaitForPwrGood  &&  sm.pState!=SM_Standby)
 		{ // states in which communication with BBB is possibly up and running
-			COMM_Proccess();
+			COMM_ProccessReadCommands();
+			COMM_ProccessWriteStatus();
 		}
 		
 		if ( power_failed || PwrMonitor.PowerFail() )

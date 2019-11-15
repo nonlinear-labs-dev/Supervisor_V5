@@ -14,7 +14,7 @@ static uint8_t	enable = 0;
 #define UBRR_1200		(103)		// 2000000/(16ul*BITS_PER_SECOND) -1   , for 1200bps
 #define UBRR_9600		(12)		// 2000000/(16ul*BITS_PER_SECOND) -1   , for 9600bps
 
-#define UBRR			(UBRR_300)
+#define UBRR			(UBRR_1200)
 
 
 static uint8_t	data[3];
@@ -43,9 +43,16 @@ void COMM_DeInit(void)
 
 static uint8_t	step=0;
 
-void COMM_Proccess(void)
+void COMM_StartStatusWrite(void)
 {
-	if ( !enable)
+	if (step == 0)
+		step = 1;
+}
+
+
+void COMM_ProccessReadCommands(void)
+{
+	if ( !enable )
 		return;
 		
 	if	(BitGet(UCSRA, RXC))			// receive register full ?
@@ -81,17 +88,23 @@ void COMM_Proccess(void)
 			break;
 		}
 	}
+}
 
+
+void COMM_ProccessWriteStatus(void)
+{
+	if ( !enable )
+		return;
 	if ( BitGet(UCSRA, UDRE) )		// send register empty ?
 	{
 		// LED_B(-1);
 		switch (step)
 		{
-			case 0 :	UDR = 0x80 + config.status; step++; break;
-			case 1 :	UDR = config.hardware_id; step++; break;
-			case 2 :	UDR = config.firmware_id; step=0; break;
+			case 0 : break;			// wait for someone start the chain
+			case 1 :	UDR = 0x80 + config.status; step++; break;
+			case 2 :	UDR = config.hardware_id; step++; break;
+			case 3 :	UDR = config.firmware_id; step=0; break;
 		}
-		
 	}
 }
 

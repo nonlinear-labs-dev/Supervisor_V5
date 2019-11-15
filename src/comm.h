@@ -8,7 +8,10 @@
 
 void	COMM_Init(void);	// 300 bps, 8 bits, 2 stop bits, odd parity
 void	COMM_DeInit(void);
-void	COMM_Proccess(void);
+
+void	COMM_StartStatusWrite(void);
+void	COMM_ProccessReadCommands(void);
+void	COMM_ProccessWriteStatus(void);
 
 #endif
 

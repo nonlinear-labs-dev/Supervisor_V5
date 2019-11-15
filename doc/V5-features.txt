@@ -1,4 +1,6 @@
 Supervisor Firmware V5 features.	2019-11-06 KSTR
+Last changed :
+	2019-11-15 KSTR		: baudrate changed from 300bps to 1200bps.
 
 V5.x firmware is primarily intedend to be used with V7.1 hardware but it was attempted
 to remain fully compatible to V6 & V7 hardware and older Firmwares for BBB and LPC
@@ -22,7 +24,7 @@ after rework) :
 A USART (async. serial interface) connection is used between Supervisor and BBB ('tty5', !!needs two
 wires to be patched on BBB's "P8"-Pinheader!!).
 
-Setup is : 300bps, 8 data bits, 2 stop bit, odd parity.
+Setup is : 1200bps, 8 data bits, 2 stop bit, odd parity.
 
 BBB Pins used are :
 TXD (as seen from Supervisor)	: gpio1[15](P8.15)  and  uart5_rxd(P8.38) via patch wire

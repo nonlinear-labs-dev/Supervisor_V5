@@ -45,6 +45,7 @@
 #define LPC_OPT_nReset					PORTC, 6	// Reset LPC (via or-ing diode)
 #define SYS_OPT_Pod0					LPC_OPT_nReset	// needed for legacy HW7.0 detecting
 #define LPC_MUTE_REQ					PORTA, 3
+#define LPC_UNMUTE_ACK					PORTA, 4
 
 // Beagle Bone control
 #define BBB_OPT_ShutDown				PORTD, 3	// Power Button
@@ -61,7 +62,6 @@
 
 
 // unused pins
-#define PORT_A4							PORTA, 4
 #define PORT_B5							PORTB, 5
 #define PORT_B6							PORTB, 6
 #define PORT_B7							PORTB, 7
@@ -105,6 +105,8 @@ uint8_t WasInActiveState(void);
 void	SetActiveState(uint8_t on);
 
 uint8_t	GetAudioEngineSignalPin(void);
+void	SetUnmuteSignalPin(uint8_t new_state);
+
 
 
 //-------------- VARIABLES

@@ -25,8 +25,23 @@ static uint16_t		default_timeout;
 #define				ACTIVE		(7)
 #define				ENOUGH_PATTERNS	(3)
 
+
+static uint8_t		unmute_state = 0;		// ==0 means muted
+static uint8_t		old_unmute_state = 0xAA;
+static uint8_t		step = 0;
+
+static uint8_t		transition = INACTIVE;
+static uint8_t		new_transition = INACTIVE;
+
 void LPC_Start_MonitorAudioEngineStatus(int32_t timeout)
 {
+	SetUnmuteSignalPin(0);
+	unmute_state = 0;		// ==0 means muted
+	old_unmute_state = 0xAA;
+	step = 0;
+	transition = INACTIVE;
+	new_transition = INACTIVE;
+
 	high_time = low_time = 0;
 	signal_timeout = 10;
 	mstate = 0xAA;
@@ -44,11 +59,33 @@ void LPC_Start_MonitorAudioEngineStatus(int32_t timeout)
 void LPC_Stop_MonitorAudioEngineStatus(void)
 {
 	coos_delete_task(LPC_Monitor_ID);
+	SetUnmuteSignalPin(0);
+
 }
 
 
 void LPC_MonitorAudioEngineStatus_Process(void)
 {
+// part 1 : Transmitter
+	unmute_state = BitGet(config.status, STAT_UNMUTED);
+	if (unmute_state != old_unmute_state)
+	{
+		old_unmute_state = unmute_state;
+		if (unmute_state)
+			new_transition = ACTIVE;
+		else
+			new_transition = INACTIVE;
+	}
+	SetUnmuteSignalPin(step < transition);
+	if (++step >= PERIOD)
+	{
+		step = 0;
+		transition=new_transition;
+	}
+
+
+
+// part 2 : Detector
 	if (default_timeout)
 		default_timeout--;
 
@@ -102,7 +139,6 @@ void LPC_MonitorAudioEngineStatus_Process(void)
 
 			high_time = 0;
 			low_time = 0;
-			
 		}
 	}
 	
@@ -125,79 +161,6 @@ void LPC_MonitorAudioEngineStatus_Process(void)
 			inactive_cntr = 0;
 		}
 	}
-
-
-/*
-		signal_timeout = PERIOD+2;
-		if (!mstate)				// now a low ?
-		{	// then check for a correct high time pattern
-			if (  high_time == ACTIVE-1 || high_time == ACTIVE || high_time == ACTIVE+1 )		// long high means "active"
-			{
-				// while (high_time--) { LED_B(1), LED_B(0); };
-				if ( active_cntr<2 )
-					active_cntr++;
-				else if (active_cntr == 2)	// enough "active" patterns ?
-				{
-					Audio.UnMute();
-					active_cntr++;		// block further unmutes
-					inactive_cntr = 0;		// arm for mute
-					unknown_cntr = 0;
-				}
-			}
-			else
-			if ( high_time == INACTIVE-1 || high_time == INACTIVE || high_time == INACTIVE+1 )		// short high means "inactive"
-			{
-				// while (high_time--) { LED_B(1), LED_B(0); };
-				if ( inactive_cntr<2 )
-					inactive_cntr++;
-				else if (inactive_cntr == 2)	// enough "inactive" patterns ?
-				{
-					Audio.Mute();
-					inactive_cntr++;		// block further mutes
-					active_cntr = 0;		// arm for unmute
-					unknown_cntr = 0;
-				}
-			}
-			else		// illegal pattern
-			{
-				if (had_a_high_transition)	// signal only when signal sequence was valid, that is low-->high-->low
-					// LED_A(1);
-					// LED_B(1); LED_B(0);
-					if ( unknown_cntr<3 )
-						unknown_cntr++;
-			}
-			high_time = 0;
-		}
-		else
-		{
-			if (mstate && (old_mstate==0))
-				had_a_high_transition = 1;
-		}
-	}
-	if (signal_timeout)
-		signal_timeout--;
-	if (signal_timeout == 0)
-	{
-		signal_timeout = PERIOD+2;
-		had_a_high_transition=0;
-		// LED_B(1); LED_B(0);
-		if ( unknown_cntr<3 )
-			unknown_cntr++;
-	}
-	
-	if (default_timeout==0)		// timed out?
-	{
-	    if (unknown_cntr == 3)
-		{
-			Audio.UnMute();
-			unknown_cntr++;
-			active_cntr = 0;
-			inactive_cntr = 0;
-		}
-	}
-*/
-
-
 }
 
 // end of file

@@ -162,11 +162,11 @@ void	SM_Booting(void)
 			sm.step++; ePC.SwitchOn(); SM_Pause(1000); 
 		return;
 		case 3 :
-			sm.step++; COMM_Init();LPC_Reset();
+			sm.step++; COMM_Init();
+			LPC_Reset(); LPC_Start_MonitorAudioEngineStatus(UNMUTE_TIMEOUT-BOOTING_FINISHED);
 			SM_Pause(BOOTING_FINISHED);
 		return;
 		case 4 :
-			LPC_Start_MonitorAudioEngineStatus(UNMUTE_TIMEOUT-BOOTING_FINISHED);
 			SM_TransitionTo( SM_Running ); 
 			PwrSwitch.Arm();	// arm button again after boot period, if momentary type
 		return;
@@ -209,13 +209,14 @@ void	SM_Shutdown(void)
 	if ( sm.step==0 )
 	{
 		sm.step=1; Led.Blink_Fast();
-		BitClr(config.status, STAT_MUTING_OVERRIDE_ENABLE);	Audio.Mute(1); LPC_Stop_MonitorAudioEngineStatus();
+		BitClr(config.status, STAT_MUTING_OVERRIDE_ENABLE);	Audio.Mute(1);
 		ePC.SwitchOff(); BBB.SwitchOff(); SM_Pause(100);
 	}
 	else
 	{
 		if ( ePC.IsOff() && BBB.IsOff() )
 		{
+			LPC_Stop_MonitorAudioEngineStatus();
 			COMM_DeInit();
 			PwrMonitor.SystemOff();
 			SM_TransitionTo( SM_Standby );

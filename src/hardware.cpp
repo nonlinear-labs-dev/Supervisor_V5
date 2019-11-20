@@ -39,7 +39,6 @@ run_state_t config_t::GetRunState(void)
 void 	IOPortInit(void)
 {
 	// unused pins are inputs with pullups enabled.
-	PinIpt(PORT_A4); PinPue(PORT_A4);
 	PinIpt(PORT_B5); PinPue(PORT_B5);
 	PinIpt(PORT_B6); PinPue(PORT_B6);
 	PinIpt(PORT_B7); PinPue(PORT_B7);
@@ -75,7 +74,8 @@ void 	IOPortInit(void)
 	PinOpt(SYS_OPT_3V_FET); PinSet(SYS_OPT_3V_FET);					// 3V FET ON (default)
 	
 	PinIpt(LPC_MUTE_REQ); PinPue(LPC_MUTE_REQ);						// LPC Mute Request
-
+	PinOpt(LPC_UNMUTE_ACK); PinClr(LPC_UNMUTE_ACK);
+	
 	
 	PinOpt(SYS_OPT_LED_A); PinClr(SYS_OPT_LED_A);
 	PinOpt(SYS_OPT_LED_B); PinClr(SYS_OPT_LED_B);
@@ -365,12 +365,15 @@ void LPC_Reset(void)
 uint8_t	GetAudioEngineSignalPin(void)
 {
 	return PinGet(LPC_MUTE_REQ);
-#if 0
-	if ( config.hardware_id == 71)
-		return PinGet(BBB_IPT_AudioRunning_7_1);
+}
+
+
+void SetUnmuteSignalPin(uint8_t new_state)
+{
+	if (new_state)
+		PinSet(LPC_UNMUTE_ACK);
 	else
-		return PinGet(BBB_IPT_AudioRunning_7_0);
-#endif
+		PinClr(LPC_UNMUTE_ACK);
 }
 
 
